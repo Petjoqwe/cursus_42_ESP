@@ -1,0 +1,72 @@
+FT_STRDUP(3)             Manual del estudiante 42             FT_STRDUP(3)
+
+NOMBRE  
+       ft_strdup - duplica una cadena de texto reservando memoria dinámica
+
+SINOPSIS  
+       #include <stdlib.h>     // para malloc
+       usar ft_strlen si estás en modo libft puro
+
+       char *ft_strdup(const char *s);
+
+DESCRIPCIÓN  
+       Esta función sirve para copiar una cadena (`s`) y guardarla en memoria nueva.
+
+       No modifica la original.  
+       Simplemente hace una copia exacta pero usando malloc,  
+       así puedes trabajar con ella sin miedo a romper el contenido original.
+
+       Es como clonar la cadena.
+
+       Pasos de la función:
+
+       1. Declaramos variables:
+              - `char *copy`: puntero donde se guardará la nueva cadena
+              - `size_t len`: longitud de la cadena original sin el '\0'
+              - `int i`: índice para recorrer letra por letra
+
+       2. Calculamos el tamaño de la cadena original:
+              len = ft_strlen(s);
+
+              Esto nos dice cuántos caracteres tiene la cadena original (sin contar el '\0').
+
+       3. Reservamos memoria para la copia, sumando 1 para el '\0':
+              copy = malloc(len + 1);
+
+       4. Comprobamos si malloc falló:
+              if (!copy)
+                  return (NULL);
+
+       5. Copiamos carácter por carácter de `s` a `copy`:
+              while (s[i])
+              {
+                  copy[i] = s[i];
+                  i++;
+              }
+
+       6. Añadimos el '\0' al final para que sea una cadena válida:
+              copy[i] = '\0';
+
+       7. Devolvemos el puntero con la copia:
+              return (copy);
+
+VALOR DEVUELTO  
+       Devuelve un puntero a una nueva cadena, clon de `s`.  
+       Si no hay memoria suficiente, devuelve NULL.
+
+NOTAS  
+       ft_strdup es una función muy útil cuando necesitas hacer una copia  
+       sin tocar la original, por ejemplo al guardar una string en una lista o array.
+
+       Recuerda: cuando termines de usarla, debes hacer `free(copy)`.
+
+RESUMEN RÁPIDO  
+       - calcular longitud
+       - malloc con len + 1
+       - comprobar malloc
+       - copiar con bucle
+       - terminar con '\0'
+       - return copy
+
+42 Málaga - Coalición Void               Mayo 2025             FT_STRDUP(3)
+

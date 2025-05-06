@@ -1,0 +1,116 @@
+FT_SUBSTR(3)             Manual del estudiante 42             FT_SUBSTR(3)
+
+NOMBRE  
+       ft_substr - crea una nueva cadena copiando una parte de otra
+
+SINOPSIS  
+       #include <stdlib.h>     // para malloc y size_t
+       usar ft_strlen si estás en modo libft puro
+
+       char *ft_substr(char const *s, unsigned int start, size_t len);
+
+DESCRIPCIÓN  
+       Esta función sirve para coger una parte de una cadena (`s`),
+       empezando desde una posición `start`, y copiar un máximo de `len` caracteres.
+
+       Lo que devuelve es una nueva cadena (malloc) con esa porción.
+
+       Casos a tener en cuenta:
+         - Si `start` está más allá del final de `s`, se devuelve una cadena vacía.
+         - Si quedan menos caracteres que `len`, solo se copian los que hay.
+
+       Pasos de la función:
+
+       1. Declaramos variables:
+              - `size_t s_len`: guardará la longitud de la cadena original.
+              - `char *sub`: será el puntero a la subcadena que vamos a devolver.
+              - `size_t i`: para recorrer y copiar carácter por carácter.
+
+              Estas tres variables son necesarias para manejar la lógica sin ensuciar el código.
+
+       2. Comprobamos si `s` es NULL:
+              if (!s)
+                  return (NULL);
+
+              Si el puntero que recibimos es nulo, no podemos hacer nada.
+              Devolvemos NULL porque no se puede operar sobre nada.
+
+       3. Obtenemos la longitud de la cadena original:
+              s_len = ft_strlen(s);
+
+              Es importante saber cuántos caracteres hay para no salirnos de los límites
+              al calcular la subcadena.
+
+       4. Comprobamos si `start` está más allá del final de `s`:
+              if (start >= s_len)
+              {
+                  sub = malloc(1);
+                  if (!sub)
+                      return (NULL);
+                  sub[0] = '\0';
+                  return (sub);
+              }
+
+              Si me pides que empiece más allá del final, no hay nada que copiar.
+              Pero aún así devuelvo una cadena vacía válida con `\0`, no NULL.
+              Eso evita errores en el uso posterior.
+
+       5. Ajustamos `len` si se pasa del final:
+              if (len > s_len - start)
+                  len = s_len - start;
+
+              Esto recorta `len` si no quedan suficientes caracteres desde `start`.
+              Así solo copio lo que realmente existe.
+
+       6. Reservamos memoria:
+              sub = malloc(len + 1);
+
+              +1 es por el `\0` final que toda string debe tener.
+
+       7. Comprobamos si `malloc` falló:
+              if (!sub)
+                  return (NULL);
+
+              Siempre que usamos malloc, hay que verificar por seguridad.
+
+       8. Copiamos desde `s[start]`, uno a uno, hasta llegar a `len`:
+              while (i < len)
+              {
+                  sub[i] = s[start + i];
+                  i++;
+              }
+
+              Esto crea la subcadena exacta. Copia segura, sin accesos inválidos.
+
+       9. Añadimos `\0` al final para cerrar la string:
+              sub[i] = '\0';
+
+              Siempre que hagas una cadena, tienes que terminarla bien.
+
+       10. Devolvemos el resultado:
+              return (sub);
+
+              Ahora ya puedes usar la subcadena tranquilamente.
+
+VALOR DEVUELTO  
+       Devuelve una nueva cadena con hasta `len` caracteres empezando desde `start`.  
+       Si falla malloc o s es NULL, devuelve NULL.  
+       Si `start` está fuera de rango, devuelve una cadena vacía.
+
+NOTAS  
+       Muy útil para cortar strings, especialmente en funciones como split, 
+       o cuando necesitas aislar una palabra, número o fragmento.
+
+RESUMEN RÁPIDO  
+       - comprobar si s es NULL  
+       - calcular ft_strlen  
+       - si start >= s_len → devolver cadena vacía  
+       - ajustar len si se pasa del final  
+       - reservar memoria con malloc(len + 1)  
+       - comprobar malloc  
+       - copiar desde s[start] hasta len caracteres  
+       - cerrar con '\0'  
+       - return sub
+
+42 Málaga - Coalición Void               Mayo 2025             FT_SUBSTR(3)
+
