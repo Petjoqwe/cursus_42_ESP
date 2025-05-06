@@ -1,0 +1,113 @@
+FD(5)                   Manual del estudiante 42                   FD(5)
+
+NOMBRE  
+       fd - descriptor de archivo en sistemas Unix/Linux
+
+SINOPSIS  
+       Los descriptores de archivo (`fd`) son números enteros que usa el sistema
+       operativo para identificar recursos de entrada/salida abiertos: ficheros, terminales,
+       tuberías, sockets, etc.
+
+       Se usan en llamadas como:
+           write(fd, buf, size);  
+           read(fd, buf, size);  
+           close(fd);
+
+DESCRIPCIÓN  
+
+       ¿QUÉ ES UN FD?  
+       Un descriptor de archivo (file descriptor) es un número entero que representa
+       una fuente o destino de datos abiertos en un programa en C.
+
+       El sistema operativo asigna un número a cada archivo o recurso abierto.  
+       El programa usa ese número para leer, escribir o cerrar ese recurso.
+
+       Por convención, los 3 primeros descriptores se abren automáticamente al arrancar el programa:
+
+       ┌──────────────┬─────┬─────────────────────────────────────┐
+       │ Nombre       │ FD  │ Descripción                         │
+       ├──────────────┼─────┼─────────────────────────────────────┤
+       │ stdin        │ 0   │ Entrada estándar (teclado, terminal)│
+       │ stdout       │ 1   │ Salida estándar (pantalla)          │
+       │ stderr       │ 2   │ Salida de errores (pantalla)        │
+       └──────────────┴─────┴─────────────────────────────────────┘
+
+       Esto significa que si haces:
+           write(1, "Hola\n", 5);
+       → estás escribiendo a la pantalla (stdout).
+
+       Si haces:
+           write(2, "Error\n", 6);
+       → escribes a stderr, útil para depurar.
+
+       Si usas ft_putchar_fd('A', 1);  
+       → imprimirás una A en pantalla.
+
+       FUNCIONES RELACIONADAS  
+       Estas son funciones que usan `fd` directamente:
+
+       - `open(path, flags)` → devuelve un nuevo `fd` para un archivo.
+       - `read(fd, buf, size)` → lee datos del descriptor `fd`.
+       - `write(fd, buf, size)` → escribe datos en el descriptor `fd`.
+       - `close(fd)` → cierra el descriptor, liberando el recurso.
+
+       FUNCIONES LIBFT RELACIONADAS
+
+       - `ft_putchar_fd(char c, int fd)`  
+       - `ft_putstr_fd(char *s, int fd)`  
+       - `ft_putendl_fd(char *s, int fd)`  
+       - `ft_putnbr_fd(int n, int fd)`
+
+       Todas estas permiten que tú decidas *dónde* enviar lo que estás imprimiendo.
+
+       EJEMPLOS DE USO
+
+       1. Escribir directamente en stdout:
+              ft_putchar_fd('A', 1);        // escribe 'A' en pantalla
+
+       2. Escribir en stderr:
+              ft_putstr_fd("Error\n", 2);   // imprime el mensaje en la salida de errores
+
+       3. Escribir en un fichero:
+              int fd = open("salida.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+              if (fd != -1)
+              {
+                  ft_putstr_fd("Texto en fichero\n", fd);
+                  close(fd);
+              }
+
+       4. Redirigir stdout a un fichero (desde terminal):
+              ./a.out > salida.txt
+
+       5. Leer desde un archivo:
+              int fd = open("datos.txt", O_RDONLY);
+              read(fd, buffer, 32);
+
+       ERRORES COMUNES
+
+       - Usar un `fd` inválido (como -1 o uno ya cerrado) → write/read fallarán.
+       - Olvidar cerrar un descriptor con `close(fd)` → fuga de recursos.
+       - Escribir en `fd = 0` (stdin) → comportamiento indefinido.
+
+VALOR DEVUELTO  
+       Las funciones como `write()` o `read()` devuelven el número de bytes escritos/leídos,  
+       o -1 si hay error (por ejemplo, si el `fd` es inválido o no hay permiso).
+
+NOTAS  
+       Entender bien los descriptores de archivo es clave para trabajar con  
+       entrada/salida real, ficheros, redirecciones y pipes.
+
+       Son la base de muchas funciones del sistema y también de la parte final de `libft`.
+
+       Siempre revisa el valor de `fd` antes de usarlo.  
+       Un `fd == -1` significa que algo ha fallado (ej. `open` no encontró el archivo).
+
+RESUMEN  
+       fd es un número que representa un archivo o canal de entrada/salida  
+       0 → stdin, 1 → stdout, 2 → stderr  
+       Se usa con read, write, close, open  
+       Las funciones *_fd de libft escriben usando fd  
+       Puedes imprimir en pantalla, en archivos o en errores con solo cambiar fd  
+       Requiere cerrar con close si abres uno nuevo
+
+42 Málaga - Coalición Void               Mayo 2025                     FD(5)

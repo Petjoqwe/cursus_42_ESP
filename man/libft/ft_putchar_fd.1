@@ -1,0 +1,58 @@
+FT_PUTCHAR_FD(3)         Manual del estudiante 42         FT_PUTCHAR_FD(3)
+
+NOMBRE  
+       ft_putchar_fd - escribe un carácter en un descriptor de archivo
+
+SINOPSIS  
+       #include <unistd.h>     // para write
+
+       void ft_putchar_fd(char c, int fd);
+
+DESCRIPCIÓN  
+       Esta función escribe el carácter `c` en el descriptor de archivo `fd`.
+
+       Parámetros de entrada:
+
+       - `c`: carácter que queremos escribir.  
+         Puede ser cualquier valor ASCII (ej. 'a', 'Z', '\n', etc.).
+
+       - `fd`: descriptor de archivo donde escribir.  
+         Ejemplos comunes:
+           - 1 → salida estándar (stdout)
+           - 2 → salida de errores (stderr)
+           - otro número → puede ser un fichero abierto con open()
+
+       Funciones utilizadas:
+
+       - `write(int fd, const void *buf, size_t count)`  
+         Escribe `count` bytes desde el buffer `buf` en el descriptor `fd`.  
+         En este caso, se usa para escribir 1 solo byte (`c`) en el destino.
+
+       Variables que vamos a usar:
+
+       - Ninguna variable adicional necesaria. Se llama directamente a `write`.
+
+       Pasos de la función:
+
+       1. Llamamos a write para enviar el carácter:
+              write(fd, &c, 1);
+
+              Se pasa la dirección de `c` para escribir un solo byte.
+              `1` indica que queremos escribir exactamente 1 carácter.
+
+VALOR DEVUELTO  
+       Esta función no devuelve nada.  
+       Si `fd` no es válido o hay un error en `write`, no lo trata.  
+       El comportamiento queda fuera del alcance de la función.
+
+NOTAS  
+       Muy útil para imprimir caracteres a stdout o stderr sin usar printf.
+
+       Si quieres imprimir una string o un número, usa `ft_putstr_fd` o `ft_putnbr_fd`.
+
+       No comprueba si el descriptor es válido. Se espera que el usuario lo controle.
+
+RESUMEN  
+       Llamar a write con fd, &c y 1
+
+42 Málaga - Coalición Void               Mayo 2025         FT_PUTCHAR_FD(3)
