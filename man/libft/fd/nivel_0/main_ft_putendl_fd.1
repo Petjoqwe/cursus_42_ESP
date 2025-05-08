@@ -1,0 +1,75 @@
+FT_PUTENDL_FD_MAIN(1)     Manual del estudiante 42     FT_PUTENDL_FD_MAIN(1)
+
+NOMBRE  
+       main_ft_putendl_fd - prueba para comprobar que ft_putendl_fd funciona correctamente
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_putendl_fd.c ft_putendl_fd.c ft_putstr_fd.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para comprobar que tu función `ft_putendl_fd`:
+
+       - Imprime correctamente una cadena terminada en salto de línea  
+       - Funciona con salida estándar, errores y archivos  
+       - No imprime nada si recibe un puntero NULL
+
+       Pasos del main:
+
+       1. Incluir cabeceras necesarias:
+              #include <unistd.h>     // para write  
+              #include <fcntl.h>      // para open y close  
+              #include <stdio.h>      // solo para mensajes auxiliares
+
+       2. Probar impresión en salida estándar (stdout):
+              ft_putendl_fd("Hola stdout", 1);
+
+              Esto imprimirá la frase y un salto de línea en pantalla.
+
+       3. Probar impresión en salida de errores (stderr):
+              ft_putendl_fd("Error detectado", 2);
+
+              Aparecerá en stderr, que puede redirigirse por separado.
+
+       4. Probar impresión en un fichero:
+              int fd = open("salida.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+              - O_WRONLY → solo escritura  
+              - O_CREAT → crea el archivo si no existe  
+              - O_TRUNC → lo vacía si ya existía  
+              - 0644 → permisos estándar: rw-r--r--
+
+              if (fd != -1)
+              {
+                  ft_putendl_fd("Escrito en archivo", fd);
+                  close(fd);
+              }
+
+              Esto escribirá la frase con salto de línea dentro de `salida.txt`.
+
+       5. Probar con NULL:
+              ft_putendl_fd(NULL, 1);
+
+              No debería hacer nada ni provocar error.
+
+EJEMPLO DE SALIDA  
+       Hola stdout  
+       Error detectado  
+       (y dentro del archivo salida.txt → "Escrito en archivo")
+
+NOTAS  
+       Esta función es útil cuando necesitas escribir una línea completa sin usar printf.  
+       Puedes redirigir la salida estándar con `>` desde la terminal o capturar errores con `2>`.
+
+RESUMEN  
+       Incluir cabeceras necesarias  
+       Imprimir una cadena en stdout con salto de línea  
+       Imprimir una cadena en stderr con salto de línea  
+       Escribir en archivo usando open y ft_putendl_fd  
+       Comprobar que con NULL no imprime
+
+42 Málaga - Coalición Void             Mayo 2025     FT_PUTENDL_FD_MAIN(1)
+

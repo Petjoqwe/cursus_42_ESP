@@ -1,0 +1,70 @@
+FT_PUTENDL_FD(3)          Manual del estudiante 42          FT_PUTENDL_FD(3)
+
+NOMBRE  
+       ft_putendl_fd - escribe una cadena seguida de un salto de línea en un descriptor de archivo
+
+SINOPSIS  
+       #include <unistd.h>     // para write
+
+       void ft_putendl_fd(char *s, int fd);
+
+DESCRIPCIÓN  
+       Esta función escribe la cadena `s` en el descriptor de archivo `fd`,
+       seguida de un salto de línea (`'\n'`). Es como `ft_putstr_fd`, pero siempre termina con nueva línea.
+
+       Parámetros de entrada:
+
+       - `s`: cadena que queremos imprimir.  
+         Debe ser una cadena terminada en '\0'. Si es NULL, no se imprime nada.
+
+       - `fd`: descriptor de archivo donde escribir.  
+         Ejemplos comunes:
+           - 1 → salida estándar (pantalla)
+           - 2 → salida de errores
+           - otro número → un archivo abierto con `open()`
+
+       Funciones auxiliares utilizadas:
+
+       - `write(int fd, const void *buf, size_t count)`  
+         Se usa para escribir caracteres en el archivo.
+
+       - `ft_putstr_fd(s, fd)`  
+         Se reutiliza esta función para escribir la cadena.
+
+       Variables que vamos a usar:
+
+       - Ninguna propia si reutilizas `ft_putstr_fd`.  
+         Si no, usarías un índice `i` para recorrer `s`.
+
+       Pasos de la función:
+
+       1. Comprobar si la cadena es NULL:
+              if (!s)
+                  return;
+
+       2. Escribir la cadena:
+              ft_putstr_fd(s, fd);
+
+       3. Escribir un salto de línea:
+              write(fd, "\n", 1);
+
+              Esto garantiza que la salida termine en una nueva línea.
+
+VALOR DEVUELTO  
+       No devuelve nada.  
+       Si `s` es NULL, no imprime nada.  
+       No gestiona errores del `write()`.
+
+NOTAS  
+       Esta función es útil para imprimir líneas completas como en printf con "\n",  
+       pero sin depender de stdio.h ni del buffer de printf.
+
+       Ideal para usar junto a `get_next_line`, mensajes de logs o respuestas por terminal.
+
+RESUMEN  
+       Comprobar si s es NULL  
+       Escribir la cadena con ft_putstr_fd  
+       Escribir '\n' con write
+
+42 Málaga - Coalición Void            Mayo 2025          FT_PUTENDL_FD(3)
+

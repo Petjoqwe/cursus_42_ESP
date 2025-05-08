@@ -1,0 +1,61 @@
+FT_PUTCHAR_FD_MAIN(1)     Manual del estudiante 42     FT_PUTCHAR_FD_MAIN(1)
+
+NOMBRE  
+       main_ft_putchar_fd - prueba básica para comprobar que ft_putchar_fd funciona correctamente
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_putchar_fd.c ft_putchar_fd.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para comprobar que tu función `ft_putchar_fd`:
+
+       - Escribe correctamente un carácter en el descriptor de archivo dado.  
+       - Funciona bien con stdout (1) y stderr (2).  
+       - No imprime basura ni se cuelga.
+
+       Pasos del main:
+
+       1. Incluir las cabeceras necesarias:
+              #include <unistd.h>     // para write
+              #include <fcntl.h>      // para open si quieres escribir en ficheros
+              #include <stdio.h>      // para printf (solo para guiar)
+
+       2. Escribir en la salida estándar:
+              ft_putchar_fd('A', 1);  // debería imprimir A en pantalla
+
+       3. Escribir en la salida de errores:
+              ft_putchar_fd('\n', 2);  // salto de línea en stderr
+              ft_putchar_fd('E', 2);   // debería verse en rojo si usas terminal que lo distinga
+
+       4. Escribir en un fichero (opcional):
+              int fd = open("prueba.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+              if (fd != -1)
+              {
+                  ft_putchar_fd('\n', fd);
+                  ft_putchar_fd('F', fd);
+                  close(fd);
+              }
+
+EJEMPLO DE SALIDA  
+       A      (en stdout)  
+       E      (en stderr)  
+       F      (dentro del fichero prueba.txt)
+
+NOTAS  
+       Este main te permite validar el comportamiento de tu función en varios contextos.
+
+       Recuerda que `fd = 1` imprime por pantalla  
+       `fd = 2` imprime errores  
+       Y cualquier otro `fd` se puede abrir con `open()`.
+
+RESUMEN  
+       Incluir cabeceras necesarias  
+       Imprimir un carácter en stdout con fd = 1  
+       Imprimir otro carácter en stderr con fd = 2  
+       Imprimir en fichero usando open, ft_putchar_fd y close
+
+42 Málaga - Coalición Void             Mayo 2025     FT_PUTCHAR_FD_MAIN(1)

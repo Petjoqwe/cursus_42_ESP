@@ -1,0 +1,62 @@
+FT_PUTSTR_FD_MAIN(1)     Manual del estudiante 42     FT_PUTSTR_FD_MAIN(1)
+
+NOMBRE  
+       main_ft_putstr_fd - prueba básica para comprobar que ft_putstr_fd funciona correctamente
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_putstr_fd.c ft_putstr_fd.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para comprobar que tu función `ft_putstr_fd`:
+
+       - Escribe correctamente una cadena completa en el descriptor de archivo indicado  
+       - No imprime nada si recibe un puntero NULL  
+       - Funciona con stdout, stderr y ficheros abiertos con open()
+
+       Pasos del main:
+
+       1. Incluir cabeceras necesarias:
+              #include <unistd.h>     // para write  
+              #include <fcntl.h>      // para open y close  
+              #include <stdio.h>      // para printf (solo para mostrar mensajes)
+
+       2. Probar con salida estándar (stdout):
+              ft_putstr_fd("Hola mundo\n", 1);     // debería verse en pantalla
+
+       3. Probar con salida de errores (stderr):
+              ft_putstr_fd("Esto es stderr\n", 2); // útil para mensajes de error
+
+       4. Probar con fichero:
+              int fd = open("test.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+              if (fd != -1)
+              {
+                  ft_putstr_fd("Esto va al archivo\n", fd);
+                  close(fd);
+              }
+
+       5. Probar con cadena NULL:
+              ft_putstr_fd(NULL, 1);  // no debería imprimir nada ni provocar error
+
+EJEMPLO DE SALIDA  
+       Hola mundo  
+       Esto es stderr  
+       (y dentro del archivo test.txt → "Esto va al archivo")
+
+NOTAS  
+       Este main verifica que `ft_putstr_fd` puede escribir en diferentes destinos.  
+       Es ideal para programas donde no puedes usar printf.
+
+       Puedes comprobar si el contenido fue escrito en el archivo usando `cat test.txt`.
+
+RESUMEN  
+       Incluir cabeceras necesarias  
+       Probar imprimir en stdout con fd = 1  
+       Probar imprimir en stderr con fd = 2  
+       Probar imprimir en archivo abierto con open  
+       Probar comportamiento con cadena NULL
+
+42 Málaga - Coalición Void             Mayo 2025     FT_PUTSTR_FD_MAIN(1)

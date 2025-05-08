@@ -1,0 +1,68 @@
+FT_PUTSTR_FD(3)           Manual del estudiante 42           FT_PUTSTR_FD(3)
+
+NOMBRE  
+       ft_putstr_fd - escribe una cadena en un descriptor de archivo
+
+SINOPSIS  
+       #include <unistd.h>     // para write
+
+       void ft_putstr_fd(char *s, int fd);
+
+DESCRIPCIÓN  
+       Esta función escribe la cadena `s` en el descriptor de archivo `fd`.
+
+       Parámetros de entrada:
+
+       - `s`: cadena de caracteres que queremos imprimir.  
+         Debe ser una cadena terminada en '\0'. Si es NULL, no se imprime nada.
+
+       - `fd`: descriptor de archivo donde escribir la cadena.  
+         Valores típicos:
+           - 1 → salida estándar (pantalla)
+           - 2 → salida de errores (stderr)
+           - otro valor → un fichero abierto con `open()`
+
+       Funciones auxiliares utilizadas:
+
+       - `write(int fd, const void *buf, size_t count)`  
+         Se usa para escribir directamente la cadena carácter a carácter.
+
+       Variables que vamos a usar:
+
+       - `size_t i`: índice para recorrer la cadena.
+
+       Pasos de la función:
+
+       1. Comprobar si la cadena es NULL:
+              if (!s)
+                  return;
+
+              No hay nada que imprimir si s es NULL. Se sale directamente.
+
+       2. Recorrer la cadena carácter por carácter:
+              size_t i = 0;
+              while (s[i])
+              {
+                  write(fd, &s[i], 1);
+                  i++;
+              }
+
+              Se imprime un carácter cada vez, usando `write` en cada paso.
+
+VALOR DEVUELTO  
+       Esta función no devuelve nada.  
+       Si `s` es NULL, simplemente no imprime.  
+       No controla errores de escritura (eso lo hace `write()` internamente).
+
+NOTAS  
+       Esta función es muy útil para imprimir mensajes sin usar `printf`.  
+       Si quieres imprimir una string seguida de salto de línea, usa `ft_putendl_fd`.
+
+       Puedes redirigir la salida a un fichero o usar `fd = 2` para mensajes de error.
+
+RESUMEN  
+       Comprobar si s es NULL  
+       Recorrer s con un bucle  
+       Llamar a write en cada carácter
+
+42 Málaga - Coalición Void            Mayo 2025           FT_PUTSTR_FD(3)
