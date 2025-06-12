@@ -1,0 +1,82 @@
+FT_SUBSTR_MAIN(1)        Manual del estudiante 42        FT_SUBSTR_MAIN(1)
+
+NOMBRE  
+       main_ft_substr - prueba básica para comprobar que ft_substr funciona bien
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_substr.c ft_substr.c ft_strlen.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para comprobar que tu función ft_substr:
+
+       - Devuelve correctamente una subcadena desde una posición start.
+       - Respeta el tamaño máximo len.
+       - Corta bien cuando start está fuera de rango.
+       - Devuelve siempre una cadena terminada en '\0'.
+       - No se rompe con entradas raras o límites.
+
+       Pasos del main:
+
+       1. Incluir cabeceras necesarias:
+              #include <stdio.h>      // para printf
+              #include <stdlib.h>     // para free
+              usar ft_strlen si estás en modo libft puro
+
+       2. Definir una cadena original:
+              const char *original = "Hola coalición Void";
+
+       3. Llamar a ft_substr con distintos casos de prueba:
+
+              // caso normal
+              char *sub1 = ft_substr(original, 5, 9);    // debería devolver "coalición"
+
+              // caso con start = 0
+              char *sub2 = ft_substr(original, 0, 4);    // debería devolver "Hola"
+
+              // caso con start muy alto
+              char *sub3 = ft_substr(original, 100, 5);  // debería devolver ""
+
+              // caso con len demasiado largo
+              char *sub4 = ft_substr(original, 5, 100);  // debería devolver "coalición Void"
+
+       4. Comprobar si alguna devuelve NULL:
+              if (!sub1 || !sub2 || !sub3 || !sub4)
+              {
+                  printf("Error: alguna llamada devolvió NULL\n");
+                  return (1);
+              }
+
+       5. Mostrar los resultados:
+              printf("sub1: %s\n", sub1);
+              printf("sub2: %s\n", sub2);
+              printf("sub3: %s\n", sub3);
+              printf("sub4: %s\n", sub4);
+
+       6. Liberar memoria reservada:
+              free(sub1);
+              free(sub2);
+              free(sub3);
+              free(sub4);
+
+EJEMPLO DE SALIDA  
+       sub1: coalición  
+       sub2: Hola  
+       sub3:  
+       sub4: coalición Void
+
+NOTAS  
+       - Siempre imprime aunque sea una cadena vacía.
+       - Si imprime "(null)", es que malloc ha fallado.
+       - Probar con cadenas vacías o NULL también puede ayudarte a robustecer tu función.
+
+RESUMEN  
+       - Definir string original  
+       - Probar ft_substr con varios valores  
+       - Mostrar resultados  
+       - Liberar memoria
+
+42 Málaga - Coalición Void               Mayo 2025         FT_SUBSTR_MAIN(1)

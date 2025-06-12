@@ -1,0 +1,28 @@
+#include <stdarg.h> esto para incluir las variables variavicas que contiene los argumentos que les pasaremos a args.
+#include <unistd.h> para el write.
+
+declaramos la funcion int ft_printf(char *str, ...) que contiene el string mas el argumento variadico.
+
+declaramos va_list args que es el nombre de la funcion.
+
+int i para recorrer strings
+
+int print charachter que va a ser el contador de characteres imprimidos que almacenaran la memoria. 
+
+luego va_start que indica cuando va a comenzar la variadica. que es despues de str (args, str) asi se escribe.
+
+iniciamos un bucle que recorrera el string hasta encontrar un %. es el el inicio de una variadica.
+
+cuando lo encuentre pasamos de caracter, y ya tenemos la letra de la variadica. d, s, p ect...
+
+una vez que lo tenemos usamos ft_format(str[i], args) le pasamos la direccion de memoria actual con su argumentos que seran almacenados en print_character. que lo imprimira ft_format. que contendra todas las instruciiones de imprimir. la manera de guardarlo sera += ft_format. para ir sumando en print_character todo.
+
+sino se cumple eso. escribimos en bucle con la direccion de memoria.
+y marcamos como print_charact++;
+luego de esto hacemos i++; para pasar caracter.
+
+va_end(args) cerramos argumento variadico.
+
+devolvemos print_character. que es el numero de characteres imprimidos que nos pide la funcion.
+
+

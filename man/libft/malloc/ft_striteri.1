@@ -1,0 +1,114 @@
+FT_STRITERI(3)            Manual del estudiante 42            FT_STRITERI(3)
+
+NOMBRE  
+       ft_striteri - aplica una función a cada carácter de una cadena, incluyendo su índice
+
+SINOPSIS  
+       #include <stddef.h>  // para size_t
+
+       void ft_striteri(char *s, void (*f)(unsigned int, char *));
+
+DESCRIPCIÓN  
+       Esta función recorre la cadena s carácter a carácter, y en cada paso  
+       llama a la función f, pasándole el índice actual y un puntero al carácter actual.
+
+       A diferencia de otras funciones que devuelven una nueva cadena,  
+       esta modifica directamente la cadena original.
+
+Parámetros de entrada:
+
+       - s: cadena original que se va a modificar.  
+         Debe estar correctamente terminada en '\0'.  
+         Esta cadena será modificada en su contenido.
+
+       - f: función que se aplicará a cada carácter.  
+         Debe tener como prototipo:
+
+             void f(unsigned int i, char *c);
+
+         Donde:
+         - i es el índice del carácter actual  
+         - c es un puntero al carácter dentro de la cadena original
+
+Variables utilizadas:
+
+       - unsigned int i: índice usado para recorrer la cadena
+
+Funciones auxiliares utilizadas:
+
+       - Ninguna. Toda la lógica está contenida dentro del bucle principal.
+
+PASOS DE LA FUNCIÓN  
+
+1. Comprobar si alguno de los parámetros es NULL:
+
+       if (!s || !f)
+           return;
+
+       ¿Por qué?
+
+       - Si s es NULL, no hay cadena sobre la que trabajar  
+       - Si f es NULL, no hay función que aplicar  
+       En ambos casos no se puede continuar y salimos sin hacer nada.
+
+2. Recorremos la cadena usando un índice:
+
+       unsigned int i = 0;
+
+       while (s[i])
+       {
+           f(i, &s[i]);
+           i++;
+       }
+
+       Explicación paso a paso:
+
+       - Declaramos una variable i para recorrer cada posición de la cadena.
+
+       - La condición s[i] evalúa si el carácter en la posición i no es el final ('\0').
+
+       - En cada iteración se llama a la función f, pasándole:
+             - el índice i  
+             - la dirección del carácter actual (&s[i]) para poder modificarlo
+
+       - Luego incrementamos i para pasar al siguiente carácter
+
+       Ejemplo real:
+
+       Supongamos que tenemos esta función:
+
+           void aumentar_ascii(unsigned int i, char *c)
+           {
+               *c = *c + i;
+           }
+
+       Y la cadena s contiene: "abcd"
+
+       - En la posición 0: 'a' + 0 → 'a'  
+       - En la posición 1: 'b' + 1 → 'c'  
+       - En la posición 2: 'c' + 2 → 'e'  
+       - En la posición 3: 'd' + 3 → 'g'
+
+       Resultado: la cadena original s ahora es "aceg"
+
+VALOR DEVUELTO  
+       No devuelve nada.  
+       La cadena s se modifica directamente en memoria.
+
+NOTAS  
+       Esta función se usa cuando quieres modificar una cadena carácter a carácter,  
+       y necesitas saber la posición de cada carácter.
+
+       Como la cadena original se modifica, **no debes pasarle cadenas constantes**  
+       como por ejemplo: "hola"
+
+       Siempre debes usar cadenas almacenadas en arrays de char o reservadas con malloc.
+
+RESUMEN  
+       Comprobar si s o f son NULL  
+       Inicializar índice i  
+       Recorrer la cadena  
+       Llamar a f con i y &s[i]  
+       Modificar la cadena en memoria
+
+42 Málaga - Coalición Void            Mayo 2025            FT_STRITERI(3)

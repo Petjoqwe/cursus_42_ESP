@@ -1,0 +1,189 @@
+FT_ITOA(3)                 Manual del estudiante 42                 FT_ITOA(3)
+
+NOMBRE  
+       ft_itoa - convierte un número entero en una cadena de caracteres
+
+SINOPSIS  
+       #include <stdlib.h>
+
+       char *ft_itoa(int n);
+
+DESCRIPCIÓN  
+       Esta función convierte un número entero n en su representación textual,
+       es decir, en una cadena terminada en '\0'.
+
+       Por ejemplo:
+           n = 123    → "123"
+           n = -42    → "-42"
+           n = 0      → "0"
+
+       Trabaja con cualquier valor dentro del rango de int.
+
+       Parámetros de entrada:
+
+       - n: número entero a convertir
+
+       Funciones auxiliares utilizadas:
+
+       - malloc(size_t) para reservar memoria
+
+       Variables utilizadas:
+
+       - long nb: versión segura del número para trabajar sin overflow  
+       - int len: cantidad de caracteres que necesitaremos  
+       - char *res: puntero a la cadena final
+
+       ¿Por qué usamos long?
+
+       El int más negativo (INT_MIN) es -2147483648. Si haces -n, no puedes representarlo
+       porque el positivo 2147483648 no cabe en un int.  
+       Por eso hacemos:
+
+              long nb = n;
+
+       Así evitamos errores al convertirlo a positivo más adelante.
+
+PASOS DE LA FUNCIÓN  
+
+1. Convertir a long para seguridad:
+
+       long nb = n;
+
+       Ahora nb es exactamente igual que n, pero en tipo long, que aguanta más rango.
+
+2. Calcular cuántos caracteres vamos a necesitar:
+
+       int len = 0;
+
+       Inicializamos len en 0. Va a contar cuántos caracteres necesitaremos.
+
+       if (n <= 0)
+           len = 1;
+
+       ¿Por qué len = 1 si n <= 0?
+
+       - Si n es cero → necesitamos 1 carácter para guardar 0  
+       - Si n es negativo → necesitamos 1 carácter para guardar el signo '-'
+
+       En ambos casos, ya hay como mínimo un carácter fijo antes de empezar a contar dígitos.
+
+       Creamos una copia temporal:
+
+       long tmp = nb;
+
+       ¿Por qué usamos tmp y no nb directamente?
+
+       Porque más adelante vamos a necesitar nb intacto para construir la cadena.  
+       tmp se usará solo para contar los dígitos del número.
+
+       Si tmp es negativo, lo pasamos a positivo:
+
+       if (tmp < 0)
+           tmp *= -1;
+
+       Esto nos permite contar cuántos dígitos tiene el número real sin preocuparnos del signo.
+
+       Contamos los dígitos dividiendo entre 10:
+
+       while (tmp > 0)
+       {
+           tmp /= 10;
+           len++;
+       }
+
+       Cada vez que dividimos por 10, eliminamos un dígito.  
+       Cuando tmp llega a 0, ya sabemos cuántos dígitos tenía.
+
+       Ejemplo: n = -123  
+       → len = 1 (por el signo)  
+       → tmp = 123  
+       → 123 → 12 → 1 → 0 → sumamos 3  
+       → total len = 4 → espacio para '-', '1', '2', '3'
+
+3. Reservamos memoria:
+
+       char *res = malloc(len + 1);
+
+       Sumamos 1 para el carácter '\0' final.
+
+4. Comprobamos si malloc falló:
+
+       if (!res)
+           return (NULL);
+
+5. Cerramos la cadena:
+
+       res[len] = '\0';
+
+6. Caso especial si n era 0:
+
+       if (n == 0)
+       {
+           res[0] = '0';
+           return (res);
+       }
+
+7. Si n era negativo, escribimos el signo:
+
+       if (nb < 0)
+       {
+           res[0] = '-';
+           nb *= -1;
+       }
+
+       Ahora nb es positivo y se puede descomponer en dígitos.
+
+8. Escribimos los dígitos desde el final hacia el principio:
+
+       while (nb > 0)
+       {
+           len--;
+           res[len] = (nb % 10) + '0';
+           nb /= 10;
+       }
+
+       Explicación:
+
+       - `nb % 10` nos da el último dígito del número.  
+         Ejemplo: si nb = 123 → nb % 10 = 3  
+         Lo convertimos a carácter con `+ '0'` y lo colocamos en la posición final disponible.
+
+       - `len--` se usa para avanzar hacia atrás en la cadena.  
+         Así vamos rellenando del final hacia el principio.
+
+       - `nb /= 10` elimina el último dígito del número.  
+         Es fundamental para ir avanzando en la descomposición.  
+         Ejemplo:  
+         nb = 123  
+         → nb % 10 = 3 (guardamos '3')  
+         → nb /= 10 → nb = 12  
+         → en la siguiente vuelta guardamos '2', luego '1', y así hasta nb = 0  
+         Cuando nb llega a 0, hemos terminado de procesar todos los dígitos.
+
+9. Devolver la cadena:
+
+       return (res);
+
+VALOR DEVUELTO  
+       Devuelve una nueva cadena con el número convertido.  
+       Si malloc falla, devuelve NULL.
+
+NOTAS  
+       Esta función es útil para transformar enteros en texto  
+       sin usar printf ni stdio.  
+       Recuerda liberar la cadena con free() después de usarla.
+
+RESUMEN  
+       Convertir n a long  
+       Calcular longitud mínima  
+       Contar dígitos positivos  
+       Reservar memoria  
+       Comprobar malloc  
+       Escribir '\0'  
+       Tratar el caso 0  
+       Añadir signo si hace falta  
+       Rellenar los dígitos  
+       Devolver la cadena
+
+42 Málaga - Coalición Void               Mayo 2025                 FT_ITOA(3)
+

@@ -1,0 +1,71 @@
+FT_CALLOC_MAIN(1)        Manual del estudiante 42        FT_CALLOC_MAIN(1)
+
+NOMBRE  
+       main_ft_calloc - prueba básica para comprobar que tu ft_calloc funciona correctamente
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_calloc.c ft_calloc.c ft_bzero.c ft_strlen.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para ver si tu función ft_calloc reserva la memoria
+       correctamente, la inicializa con ceros y no rompe nada.
+
+       Objetivo: pedir memoria para varios elementos tipo char y comprobar que
+       todos los bytes están a cero justo después de reservar.
+
+       Pasos del main:
+
+       1. Incluimos las cabeceras necesarias:
+              #include <stdio.h>      // para printf
+              #include <stdlib.h>     // para free
+              #include <string.h>     // solo si comparas con calloc del sistema
+              o
+              usar solo tus funciones si estás en modo purista.
+
+       2. Llamamos a ft_calloc:
+              char *mem = ft_calloc(10, sizeof(char));
+
+              Queremos 10 bytes reservados y limpios.
+
+       3. Comprobamos si falló:
+              if (!mem)
+              {
+                  printf("Error: ft_calloc devolvió NULL\n");
+                  return (1);
+              }
+
+       4. Recorremos lo que nos dio y comprobamos que está todo a cero:
+              for (int i = 0; i < 10; i++)
+                  printf("mem[%d] = %d\n", i, mem[i]);
+
+              Si todo va bien, verás 10 líneas con ceros.
+
+       5. Liberamos la memoria para no dejar fugas:
+              free(mem);
+
+EJEMPLO DE SALIDA  
+       mem[0] = 0  
+       mem[1] = 0  
+       ...  
+       mem[9] = 0
+
+NOTAS  
+       Puedes hacer más pruebas:
+           - Comparar con calloc del sistema.
+           - Probar con tamaños grandes.
+           - Probar con valores que provoquen overflow.
+
+       No uses funciones externas si estás validando en el proyecto 42.  
+       Todo debe ser con tus propias funciones (`ft_bzero`, etc.).
+
+RESUMEN  
+       - Llamar a ft_calloc con 10 bytes
+       - Ver que devuelve memoria válida
+       - Comprobar que todo está a cero
+       - Hacer free al final
+
+42 Málaga - Coalición Void               Mayo 2025         FT_CALLOC_MAIN(1)

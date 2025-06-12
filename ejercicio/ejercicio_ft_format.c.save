@@ -1,0 +1,31 @@
+declaramos nuestra funcion ft_format que recibe un int y recibe args, y un const char format que es
+lo que va a recorrer el string.
+
+QUE HACE ESTE EJERCICIO?
+
+RECORRE LA CADENA QUE LE ENVIEMOS AL DETECTAR LUEGO DEL % SI ES UNA D, RECORRERA ENTEROS, CON LA QUE 
+
+declaramos una variable que recorre las los caracteres impresos.
+
+
+empezamos con las condiciones,  SI FORMAT ES IGUAL A 'c' caracter_impreso += y lo imprimimos 
+con la funcion ft_printchar que imprime un caracter. que recibe un (va_arg 'que es la variadica(args,
+int)) que devuelve un int.
+
+luego else if 
+format == 's'
+la visma condicion pero con la funcion que imprime ft_printstr(va_arg, char *) que es lo que devuelv
+impreso.
+
+else if format == 'p'
+
+esta imprimira un puntero. y se llama ft_printptr(va_arg(args, unsigned long long) que es para impri
+mir un puntero.
+
+else if (format == d o i)
+
+y usamos una funcion para imprimir enteros con signo. ft_print_unsigned(va_arg, unsigned int))
+
+else if ' x o X'
+
+llamamos a la funcion  

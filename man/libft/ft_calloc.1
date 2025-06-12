@@ -1,0 +1,71 @@
+FT_CALLOC(3)             Manual del estudiante 42             FT_CALLOC(3)
+
+NOMBRE  
+       ft_calloc - reserva memoria para un array e inicializa su contenido a cero
+
+SINOPSIS  
+       #include <stdlib.h>     // para malloc y size_t
+       #include <limits.h>     // para SIZE_MAX
+       #include <stdint.h>     // por si SIZE_MAX no está en limits.h
+
+       void *ft_calloc(size_t count, size_t size);
+
+DESCRIPCIÓN  
+       Esta función sirve para reservar memoria para un array, por ejemplo 10 elementos
+       de X bytes cada uno, y que toda esa memoria esté inicializada a cero.
+
+       Es parecida a malloc, pero más segura, porque evita que haya *overflow*
+       cuando se multiplica `count * size`, y además te deja toda la memoria limpia
+       desde el principio.
+
+       Variables que vamos a usar:
+
+       - `size_t total_size`: para guardar el resultado de `count * size`, es decir, 
+         el total de bytes que vamos a pedir.
+       - `void *ptr`: para guardar la dirección de la memoria que nos dé `malloc`.
+
+       Pasos de la función:
+
+       1. Comprobamos si hay riesgo de overflow:
+              if (size != 0 && count > SIZE_MAX / size)
+                  return (NULL);
+              Esto evita que la multiplicación rompa los límites de memoria del sistema.
+
+       2. Calculamos el total:
+              total_size = count * size;
+
+       3. Reservamos la memoria:
+              ptr = malloc(total_size);
+
+       4. Comprobamos si `malloc` falló:
+              if (!ptr)
+                  return (NULL);
+
+       5. Inicializamos toda la memoria con ceros:
+              ft_bzero(ptr, total_size);
+
+       6. Devolvemos la dirección:
+              return (ptr);
+
+VALOR DEVUELTO  
+       Devuelve un puntero a la memoria reservada e inicializada.  
+       Si `malloc` falla o si hay overflow, devuelve NULL.
+
+NOTAS  
+       Es una función muy útil cuando quieres trabajar con arrays que no tengan
+       valores basura al empezar.
+
+       `ft_calloc` se parece a `malloc` + `ft_bzero`, pero todo junto y con seguridad añadida.
+
+       Siempre que la uses, recuerda que luego tendrás que hacer `free()`.
+
+RESUMEN RÁPIDO  
+       - Comprobar overflow
+       - Multiplicar count * size
+       - malloc
+       - comprobar NULL
+       - bzero
+       - return ptr
+
+42 Málaga - Coalición Void               Mayo 2025             FT_CALLOC(3)
+

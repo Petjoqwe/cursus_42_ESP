@@ -1,0 +1,108 @@
+MAKEFILE(5)              Manual del estudiante 42              MAKEFILE(5)
+
+NOMBRE  
+       Makefile - automatiza la compilación del proyecto con reglas claras
+
+SINOPSIS  
+       make [target]
+
+DESCRIPCIÓN  
+       El Makefile es un archivo que define cómo compilar y enlazar los archivos fuente del proyecto.  
+       Permite automatizar tareas como construir, limpiar y recompilar el programa sin reescribir comandos largos.
+
+       Este manual explica un Makefile básico para proyectos en C, especialmente útil en la libft o minilibx.
+
+VARIABLES DEFINIDAS  
+
+       NAME = libft.a
+           Nombre del archivo final (por ejemplo, una librería o binario).
+
+       CC = cc
+           Compilador a usar (puede cambiarse por gcc si se prefiere).
+
+       CFLAGS = -Wall -Wextra -Werror
+           Flags para el compilador.  
+           Estas obligan a mostrar todos los errores y advertencias.
+
+       SRC = ft_split.c ft_strlen.c ft_substr.c
+           Lista de archivos fuente. Se pueden añadir más.
+
+       OBJ = $(SRC:.c=.o)
+           Convierte los archivos .c en .o automáticamente usando sustitución.
+
+REGLAS PRINCIPALES
+
+all: $(NAME)
+
+       - Objetivo por defecto. Se ejecuta si haces solo "make".
+       - Llama a la regla que construye el archivo final.
+
+2. $(NAME): $(OBJ)
+       	$(AR) rcs $(NAME) $(OBJ)
+
+       - Crea la librería (por ejemplo, libft.a) con los archivos objeto.
+       - Usa ar para crear el archivo y rcs para reemplazar, crear e indexar.
+
+3. %.o: %.c
+       	$(CC) $(CFLAGS) -c $< -o $@
+
+       - Esta es una regla de patrón. Define cómo transformar cualquier archivo .c en su correspondiente .o
+
+       Paso a paso:
+       - %.o: %.c
+         Esta línea define un patrón general: para cada archivo .c, queremos generar su archivo .o
+         Por ejemplo: si tienes ft_split.c, esta regla generará ft_split.o
+
+       - $(CC): el compilador (definido antes como cc)
+
+       - $(CFLAGS): opciones del compilador (-Wall -Wextra -Werror)
+
+       - -c: indica que solo queremos compilar (no enlazar)
+
+       - $<: representa el archivo fuente .c que activa esta regla
+         Por ejemplo, si estamos compilando ft_split.c, $< será "ft_split.c"
+
+       - -o $@: indica el nombre del archivo de salida
+         $@ representa el objetivo de la regla, que será el .o
+         Por ejemplo, si la regla quiere producir ft_split.o, $@ será "ft_split.o"
+
+       Resultado:
+         cc -Wall -Wextra -Werror -c ft_split.c -o ft_split.o
+
+       Esto genera el archivo objeto sin necesidad de escribir reglas repetitivas para cada archivo .c
+
+clean:
+       	rm -f $(OBJ)
+
+       - Elimina todos los archivos objeto para recompilar desde cero.
+
+fclean: clean
+       	rm -f $(NAME)
+
+       - Hace lo mismo que clean y además elimina el archivo final (libft.a).
+
+re: fclean all
+
+       - Elimina todo y recompila desde cero. Muy útil para asegurarte de que no queda nada viejo.
+
+.PHONY: all clean fclean re
+
+       - Indica que estas reglas no son archivos reales. Evita errores si hay un archivo llamado "clean".
+
+EJEMPLO DE USO  
+       make        → Compila todo
+       make clean  → Elimina los .o
+       make fclean → Elimina los .o y el ejecutable
+       make re     → Limpia todo y recompila
+
+NOTAS  
+       Puedes modificar el Makefile para proyectos con ejecutables, solo cambia NAME por el nombre del binario y añade una regla main.o si lo necesitas.
+
+RESUMEN  
+       Definir variables (NAME, SRC, OBJ, CC, CFLAGS)  
+       Crear reglas: all, $(NAME), clean, fclean, re  
+       Añadir .PHONY para evitar conflictos  
+       Ejecutar make para compilar automáticamente
+
+42 Málaga - Coalición Void              Mayo 2025              MAKEFILE(5)
+

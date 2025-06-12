@@ -1,0 +1,128 @@
+FT_STRMAPI(3)             Manual del estudiante 42             FT_STRMAPI(3)
+
+NOMBRE  
+       ft_strmapi - crea una nueva cadena aplicando una función a cada carácter, con su índice
+
+SINOPSIS  
+       #include <stdlib.h>    // para malloc
+       #include <stddef.h>    // para size_t
+
+       char *ft_strmapi(const char *s, char (*f)(unsigned int, char));
+
+DESCRIPCIÓN  
+       Esta función recorre la cadena s carácter por carácter, y en cada paso  
+       llama a la función f, pasándole el índice actual y el carácter original.  
+       El resultado de esa función se guarda en una **nueva cadena**.
+
+       La cadena original no se modifica.  
+       La nueva cadena se construye en memoria dinámica con malloc.
+
+Parámetros de entrada:
+
+       - s: cadena original de solo lectura  
+         No se modificará. Debe estar terminada en '\0'
+
+       - f: función que recibe un índice y un carácter, y devuelve un carácter  
+         El carácter devuelto será colocado en la nueva cadena
+
+         Prototipo de f:
+             char f(unsigned int i, char c);
+
+Variables utilizadas:
+
+       - unsigned int i: índice para recorrer la cadena  
+       - size_t len: longitud de s  
+       - char *res: nueva cadena que vamos a devolver
+
+Funciones auxiliares utilizadas:
+
+       - malloc para reservar memoria  
+       - ft_strlen para calcular la longitud de s
+
+PASOS DE LA FUNCIÓN  
+
+1. Comprobar si s o f son NULL:
+
+       if (!s || !f)
+           return NULL;
+
+       Si alguno de los punteros es nulo, no se puede continuar.  
+       Devolvemos NULL como medida de seguridad.
+
+2. Calcular la longitud de la cadena original:
+
+       size_t len = ft_strlen(s);
+
+       Necesitamos saber cuántos caracteres tiene s para crear la nueva cadena.
+
+3. Reservar memoria para la nueva cadena:
+
+       char *res = malloc(len + 1);
+
+       Reservamos espacio para len caracteres más el '\0' final.
+
+       Si malloc falla:
+
+       if (!res)
+           return NULL;
+
+4. Recorrer la cadena original aplicando la función:
+
+       unsigned int i = 0;
+
+       while (s[i])
+       {
+           res[i] = f(i, s[i]);
+           i++;
+       }
+
+       Explicación:
+
+       - Recorremos desde el índice 0 hasta el final  
+       - En cada paso, llamamos a f con el índice y el carácter original  
+       - El resultado se guarda en res[i]
+
+       Ejemplo:
+
+       Si s = "abc" y usamos:
+
+           char mayus_con_offset(unsigned int i, char c)
+           {
+               return c + i;
+           }
+
+       Resultado:
+           'a' + 0 = 'a'  
+           'b' + 1 = 'c'  
+           'c' + 2 = 'e'  
+           res = "ace"
+
+5. Finalizar la cadena:
+
+       res[i] = '\0';
+
+       Colocamos el carácter nulo para que la cadena esté bien formada.
+
+6. Devolver la nueva cadena:
+
+       return res;
+
+VALOR DEVUELTO  
+       Devuelve una nueva cadena donde cada carácter es el resultado  
+       de aplicar la función f al carácter correspondiente de s.  
+       Si s o f son NULL, o si malloc falla, devuelve NULL.
+
+NOTAS  
+       A diferencia de ft_striteri, esta función **no modifica la original**.  
+       Crea una nueva cadena, útil si necesitas conservar la original intacta.  
+       Recuerda liberar la cadena devuelta con free() cuando termines de usarla.
+
+RESUMEN  
+       Comprobar si s o f son NULL  
+       Calcular longitud de s  
+       Reservar memoria para nueva cadena  
+       Aplicar f a cada carácter con su índice  
+       Escribir '\0' al final  
+       Devolver la nueva cadena
+
+42 Málaga - Coalición Void            Mayo 2025             FT_STRMAPI(3)

@@ -6,13 +6,13 @@
 /*   By: paguiler <paguiler@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:54:01 by paguiler          #+#    #+#             */
-/*   Updated: 2025/04/23 13:06:30 by paguiler         ###   ########.fr       */
+/*   Updated: 2025/05/16 23:03:54 by paguiler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_ascii(int c)
+int	ft_isascii(int c)
 {
 	if (c >= 0 && c <= 127)
 		return (1);

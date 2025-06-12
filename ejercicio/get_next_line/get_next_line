@@ -1,0 +1,155 @@
+#include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
+
+/**
+ * free_buffer_and_stash - Libera memoria de buffer y stash en caso de error
+ * @buffer: memoria temporal usada en lectura
+ * @stash: memoria acumulada con el contenido leído hasta el momento
+ * 
+ * Devuelve siempre NULL para facilitar su uso en returns con error.
+ */
+static void	*free_buffer_and_stash(char *buffer, char *stash)
+{
+	if (buffer)
+		free(buffer); // Evita leak si el malloc del buffer se hizo correctamente
+	if (stash)
+		free(stash);  // Libera el stash acumulado si se requiere limpiar todo
+	return (NULL);    // Devuelve NULL para retornar directamente desde funciones
+}
+
+/**
+ * read_line - Acumula en stash los datos leídos desde fd hasta encontrar '\n'
+ * @fd: descriptor de archivo desde el cual leer
+ * @stash: contenido anterior (si lo hay) que podría ya contener datos útiles
+ * 
+ * Usa un buffer temporal para leer hasta BUFFER_SIZE bytes por ciclo.
+ * Concatenará al stash hasta encontrar un salto de línea o EOF.
+ * 
+ * Ejemplo: si fd contiene "hola\nmundo\n" y stash = NULL, 
+ * devolverá un stash con "hola\nmundo\n" (o lo necesario hasta el primer salto).
+ */
+static char	*read_line(int fd, char *stash)
+{
+	char		*buffer;       // Almacena temporalmente los datos leídos del archivo
+	ssize_t		bytes_read;    // Bytes leídos por read()
+
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (free_buffer_and_stash(NULL, stash)); // Si falla malloc, liberamos stash y salimos
+
+	bytes_read = 1; // Inicializamos >0 para entrar al bucle
+	while (!ft_strchr(stash, '\n') && bytes_read > 0) // Mientras no encontremos '\n' y se siga leyendo
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE); // Leemos hasta BUFFER_SIZE bytes del archivo
+		if (bytes_read == -1)
+			return (free_buffer_and_stash(buffer, stash)); // Error al leer, limpiamos y salimos
+		buffer[bytes_read] = '\0'; // Añadimos terminador nulo para poder tratar buffer como string
+
+		stash = ft_strjoin(stash, buffer); // Concatenamos buffer al stash
+		if (!stash)
+			return (free_buffer_and_stash(buffer, NULL)); // Error en malloc de join, liberamos y salimos
+	}
+	free(buffer); // Ya no necesitamos el buffer temporal
+	return (stash); // stash contiene los datos acumulados hasta '\n' o EOF
+}
+
+/**
+ * extract_line - Extrae la primera línea (con '\n' si existe) de stash
+ * @stash: contenido acumulado
+ * 
+ * Devuelve una string nueva que representa la línea extraída.
+ * Ejemplo: si stash = "hola\nmundo", devuelve "hola\n".
+ */
+static char	*extract_line(char *stash)
+{
+	int		i;
+	char	*line;
+
+	if (!stash || stash[0] == '\0')
+		return (NULL); // Nada que devolver si el stash está vacío
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++; // Recorremos hasta encontrar '\n' o final
+
+	if (stash[i] == '\n')
+		i++; // Incluir el salto de línea si existe
+
+	line = ft_substr(stash, 0, i); // Extraemos desde 0 hasta i (incluye '\n' si estaba)
+	if (!line)
+		return (NULL); // Fallo en malloc de substr
+	return (line);
+}
+
+/**
+ * save_rest - Guarda lo que queda en stash después del salto de línea
+ * @stash: contenido acumulado del cual ya se ha extraído una línea
+ * 
+ * Devuelve lo que sigue después del '\n'. Si no queda nada, devuelve NULL.
+ * Ejemplo: stash = "hola\nmundo", devuelve "mundo"
+ */
+static char	*save_rest(char *stash)
+{
+	char	*rest;
+	int		i;
+	int		len;
+
+	if (!stash)
+		return (NULL);
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++; // Avanzamos hasta '\n'
+	if (!stash[i])
+	{
+		free(stash); // No hay '\n', liberamos todo
+		return (NULL);
+	}
+	i++; // Nos colocamos justo después de '\n'
+	len = ft_strlen(stash + i); // Calculamos cuánto queda después
+
+	rest = ft_substr(stash, i, len); // Copiamos el resto desde i hasta final
+	free(stash); // Liberamos el viejo stash
+	return (rest); // Devolvemos el nuevo stash reducido
+}
+
+/**
+ * get_next_line - Devuelve la siguiente línea de un archivo por cada llamada
+ * @fd: descriptor del archivo a leer
+ * 
+ * Usa stash como buffer estático entre llamadas para recordar lo que sobró.
+ * 
+ * Ejemplo de uso:
+ * int fd = open("archivo.txt", O_RDONLY);
+ * char *line;
+ * while ((line = get_next_line(fd)))
+ * {
+ *     printf("%s", line);
+ *     free(line);
+ * }
+ */
+char	*get_next_line(int fd)
+{
+	static char	*stash; // Se mantiene entre llamadas para acumular datos restantes
+	char		*line;  // Línea a devolver
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL); // Verificamos argumentos inválidos
+
+	stash = read_line(fd, stash); // Leemos del archivo y actualizamos stash
+	if (!stash)
+		return (NULL); // Si hubo error o EOF sin datos, salimos
+
+	line = extract_line(stash); // Extraemos la primera línea
+	if (!line) // Si no se pudo extraer línea, liberamos y salimos
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
+
+	stash = save_rest(stash); // Actualizamos stash quitando la línea ya devuelta
+	return (line); // Devolvemos la línea pedida
+}
+

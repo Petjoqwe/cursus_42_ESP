@@ -1,0 +1,91 @@
+ft_itoa.
+
+Tengo que pasar de un int y devolver un char * hecho con malloc.
+
+Primero que hay que hacer.
+Tenemos que comprobar int maximos y minimos con long.
+tambien pasarlo a char.
+hacerle malloc.
+comprobacion  con null.
+recorrer el string y comprobarlo.
+
+1.
+Vamos a convertir n a long nb. para asi evitar fallos de overflow.
+2.
+iniciamos len= 0; Para asi poder a contar a partir del numero primero.
+3.
+comprobamos si es menor  o igual a 0 y establecemos len en 1.
+que nos sirve para guardar el cero con len 1.
+o para guardar un - si es negativo para luego con el malloc.
+4.
+Creamos una copia temporal.
+
+y comprobamos si es menor a 0. 
+si es menor, la hacemos positiva.
+para luego poder recorrerlo y omitir su signo.
+5.
+creamos un bucle para tmp que mientras sea mayor a 0 siga dividiendo entre 10 y guardand
+olo en tmp y pasamos len por cada bucle, asi sabemos la distancia que hay que guardar.
+
+6.
+guardamos memoria con malloc . sumando len mas 1 para incluir el \0
+a. 
+7.
+comprobamos si fallo.
+8.
+cerramos el char hecho con malloc con \0 para cerrar la cadena recien hecha.
+9.
+comprobamos si n es 0. si lo es guardamos 0 justo en el caracter primero.
+10.
+comprobamos si nb es negativo. 
+
+si es negativo guardamos el signo negativo en el primer caracter. de malloc. que se 
+hace con res[0]
+y pasamos nb a positivo.
+11.
+si nb es mayor a 0.
+disminuimos la posicion para no leer el caracter \0
+y hacemos el resto de nb + '0' para obtener el ultimo numero de la cadena.
+luego lo dividimos entre 10 y lo almacenamos en nb. para luego con el resto imprimir el 
+ultimo numero en el char echo por malloc.
+
+
+12.
+devolvemos res.
+
+ft_strmapi
+El ejercicio trata de recorrer la cadena completa de s y devolverla pasada por la funcion pasada con malloc y almacenada en malloc.
+
+1.
+Comprobamos si S o F estan correctos.
+
+2. recorremos s para saber la distancia de la cadena.
+
+3.
+hacemos malloc para guardar la memoria en la variable s
+4.
+comprobamos si malloc Falla. o fallo el proceso de guardar la memoria con malloc.
+5.
+hacemos un bucle de s-
+almacenando el resultado en una variable, que guarda el resultado de la funcion f.
+6.
+devolvemos res.
+
+ft_split
+Esta funcion divide un string en subcadenas. por ejemplos dos palabras divididos por el char c. que es un espacio, por ejemplo.
+
+1.
+Comprobamos s si existe.
+2.
+Contamos las palabras. Para ello, vamos a usar dos variables.
+world count y i.
+para ello recorremos el string hasta que hayemos una coincidencia con c.
+Si hayamos la coincidencia pasamos hasta que saltemos los dos espacios. si ya es diferente a c.
+condicion de que llegue hasta el final del string.
+
+aumentamos el contador.
+hacemos bucle de hasta que no sea diferente a c y pasamos caracter. asi se sucede el bucle.
+
+
+
+

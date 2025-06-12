@@ -1,0 +1,16 @@
+ft_printf/
+│
+├── includes/
+│   └── ft_printf.h
+├── src/
+│   ├── ft_printf.c          ← función principal
+│   ├── ft_put_char.c        ← funciones auxiliares por tipo
+│   ├── ft_put_str.c
+│   ├── ft_put_nbr.c
+│   ├── ft_put_unsigned.c
+│   ├── ft_put_hex.c
+│   ├── ft_put_ptr.c
+│   └── utils.c              ← helpers (e.g. ft_strlen, etc.)
+	ft_format.c	para incluir todos los %d, %c, %s.
+├── Makefile
+└── main.c                   ← para testear

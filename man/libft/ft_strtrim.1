@@ -1,0 +1,117 @@
+FT_STRTRIM(3)            Manual del estudiante 42            FT_STRTRIM(3)
+
+NOMBRE  
+       ft_strtrim - recorta los caracteres al principio y al final de una cadena
+
+SINOPSIS  
+       #include <stdlib.h>     // para malloc y size_t  
+       usar ft_strlen y ft_strchr si estás en modo libft puro
+
+       char *ft_strtrim(char const *s1, char const *set);
+
+DESCRIPCIÓN  
+       Esta función elimina todos los caracteres que estén al principio
+       y al final de la cadena `s1`, si esos caracteres aparecen dentro de la cadena `set`.
+
+       Por ejemplo, si `s1 = "--Hola--"` y `set = "-"`, el resultado será `"Hola"`.
+
+       No modifica `s1`, trabaja sobre una copia nueva creada con `malloc`.
+
+       Variables que vamos a usar:
+
+       - `size_t start`: desde dónde empezaremos a copiar (primer carácter útil).
+       - `size_t end`: hasta dónde terminamos (exclusivo).
+       - `size_t len`: cuántos caracteres reales vamos a copiar.
+       - `char *res`: puntero que guardará la nueva cadena.
+
+       Pasos de la función:
+
+       1. Comprobamos si `s1` o `set` son NULL:
+              if (!s1 || !set)
+                  return (NULL);
+
+              Esto es por seguridad. Si cualquiera de los dos no existe,
+              no podemos operar. Evitamos segmentation faults.
+
+       2. Inicializamos los índices:
+              size_t start = 0;
+              size_t end = ft_strlen(s1);
+
+              `start` arranca desde el principio y `end` desde el final.
+              Los usaremos para identificar los límites reales del contenido útil.
+
+       3. Avanzamos el índice `start` mientras s1[start] esté en el `set`:
+              while (s1[start] && ft_strchr(set, s1[start]))
+                  start++;
+
+              Esto recorta los caracteres que sobran al principio.
+
+       4. Retrocedemos el índice `end` mientras s1[end - 1] esté en el `set`:
+              while (end > start && ft_strchr(set, s1[end - 1]))
+                  end--;
+
+              Aquí tenemos que comprobar `end > start` para no pasarnos.
+              Esto recorta los caracteres que sobran al final de la cadena.
+
+       5. Calculamos la longitud que hay entre start y end:
+              size_t len = end - start;
+
+              Si la cadena estaba completamente compuesta por caracteres del `set`,
+              entonces start >= end, y len será 0. Eso significa cadena vacía.
+
+       6. Reservamos memoria para la nueva cadena:
+              char *res = malloc(len + 1);
+
+              +1 porque todas las cadenas en C terminan con '\0'.
+
+       7. Comprobamos si malloc falló:
+              if (!res)
+                  return (NULL);
+
+              Nunca uses el puntero devuelto por malloc sin comprobarlo.
+              Si malloc falla, devuelves NULL y cortas.
+
+       8. Copiamos los caracteres útiles desde s1:
+              size_t i = 0;
+              while (i < len)
+              {
+                  res[i] = s1[start + i];
+                  i++;
+              }
+
+       9. Cerramos la nueva cadena con '\0':
+              res[i] = '\0';
+
+       10. Devolvemos el resultado final:
+              return (res);
+
+VALOR DEVUELTO  
+       Devuelve una nueva cadena con los caracteres de `s1` recortados por los extremos,  
+       si están en `set`.  
+       Si `s1` o `set` son NULL, devuelve NULL.  
+       Si se recortan todos los caracteres, devuelve una cadena vacía.  
+       Si malloc falla, también devuelve NULL.
+
+NOTAS  
+       Esta función es útil para limpiar entradas del usuario, eliminar
+       espacios, saltos de línea, tabulaciones o cualquier otro carácter molesto.
+
+       `ft_strchr(set, c)` permite comprobar si un carácter `c` está dentro del set.  
+       Es la clave de esta función.  
+       La cadena original `s1` no se modifica. Trabajamos sobre una copia nueva.
+
+       Como siempre, recuerda: hay que hacer `free()` cuando termines de usar la cadena.
+
+RESUMEN  
+       Comprobar que los punteros s1 y set no sean NULL  
+       Inicializar los índices start y end  
+       Avanzar el índice start si los caracteres están en el set  
+       Retroceder el índice end si los caracteres están en el set  
+       Calcular la longitud útil de la subcadena  
+       Reservar memoria con malloc para len + 1  
+       Copiar los caracteres útiles desde s1  
+       Terminar la nueva cadena con '\0'  
+       Devolver el puntero con la cadena recortada
+
+42 Málaga - Coalición Void               Mayo 2025            FT_STRTRIM(3)
+

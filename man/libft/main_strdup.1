@@ -1,0 +1,70 @@
+FT_STRDUP_MAIN(1)        Manual del estudiante 42        FT_STRDUP_MAIN(1)
+
+NOMBRE  
+       main_ft_strdup - prueba básica para comprobar que tu ft_strdup funciona correctamente
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_strdup.c ft_strdup.c ft_strlen.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para comprobar que tu función `ft_strdup`:
+
+       - Copia bien una cadena.
+       - Reserva memoria nueva.
+       - No toca la cadena original.
+       - Añade el '\0' correctamente.
+
+       Pasos del main:
+
+       1. Incluir cabeceras:
+              #include <stdio.h>      // para printf
+              #include <stdlib.h>     // para free
+              usar tus funciones si estás en modo libft puro
+
+       2. Creamos una cadena original:
+              const char *original = "Hola, 42";
+
+       3. Duplicamos usando tu función:
+              char *copia = ft_strdup(original);
+
+       4. Comprobamos si devolvió NULL:
+              if (!copia)
+              {
+                  printf("Error: ft_strdup devolvió NULL\n");
+                  return (1);
+              }
+
+       5. Mostramos ambas cadenas:
+              printf("Original: %s\n", original);
+              printf("Copia   : %s\n", copia);
+
+       6. Comprobamos si las direcciones son distintas (memoria nueva):
+              if (original == copia)
+                  printf("Error: copia apunta al mismo sitio que original\n");
+              else
+                  printf("OK: copia está en memoria distinta\n");
+
+       7. Liberamos la memoria de la copia:
+              free(copia);
+
+EJEMPLO DE SALIDA  
+       Original: Hola, 42  
+       Copia   : Hola, 42  
+       OK: copia está en memoria distinta
+
+NOTAS  
+       También puedes probar con cadenas vacías, cadenas largas o strings con caracteres raros.  
+       El objetivo es que funcione siempre, sin romperse ni fugas de memoria.
+
+RESUMEN  
+       - Declarar original
+       - Llamar a ft_strdup
+       - Mostrar copia y original
+       - Comprobar que la copia no es la misma dirección
+       - Liberar memoria
+
+42 Málaga - Coalición Void               Mayo 2025         FT_STRDUP_MAIN(1)

@@ -1,0 +1,85 @@
+FT_STRJOIN_MAIN(1)       Manual del estudiante 42       FT_STRJOIN_MAIN(1)
+
+NOMBRE  
+       main_ft_strjoin - prueba para verificar que ft_strjoin concatena correctamente
+
+SINOPSIS  
+       Compilar con:
+           cc -Wall -Wextra -Werror main_ft_strjoin.c ft_strjoin.c ft_strlen.c ft_strlcpy.c
+
+       Ejecutar con:
+           ./a.out
+
+DESCRIPCIÓN  
+       Este main sirve para comprobar que tu función `ft_strjoin` hace lo que tiene que hacer:
+
+       - Une dos cadenas en una nueva.
+       - No toca las originales.
+       - Termina con '\0'.
+       - Reserva memoria correctamente.
+       - Se comporta bien con entradas vacías.
+
+       Vamos paso a paso:
+
+       1. Incluir las cabeceras necesarias:
+              #include <stdio.h>      // para printf
+              #include <stdlib.h>     // para free
+              usar solo tus funciones si estás validando libft
+
+       2. Declarar varias pruebas para unir cadenas:
+              const char *a = "Hola, ";
+              const char *b = "mundo!";
+              const char *c = "";
+              const char *d = "Coalición Void";
+
+       3. Llamar a ft_strjoin en diferentes combinaciones:
+
+              char *res1 = ft_strjoin(a, b);   // resultado esperado: "Hola, mundo!"
+              char *res2 = ft_strjoin(a, c);   // resultado esperado: "Hola, "
+              char *res3 = ft_strjoin(c, b);   // resultado esperado: "mundo!"
+              char *res4 = ft_strjoin(c, c);   // resultado esperado: ""
+              char *res5 = ft_strjoin(b, d);   // resultado esperado: "mundo!Coalición Void"
+
+       4. Comprobar si alguno devolvió NULL:
+              if (!res1 || !res2 || !res3 || !res4 || !res5)
+              {
+                  printf("Error: malloc falló en alguna prueba\n");
+                  return (1);
+              }
+
+       5. Imprimir los resultados:
+              printf("res1: %s\n", res1);
+              printf("res2: %s\n", res2);
+              printf("res3: %s\n", res3);
+              printf("res4: %s\n", res4);
+              printf("res5: %s\n", res5);
+
+       6. Liberar toda la memoria reservada:
+              free(res1);
+              free(res2);
+              free(res3);
+              free(res4);
+              free(res5);
+
+EJEMPLO DE SALIDA  
+       res1: Hola, mundo!  
+       res2: Hola,   
+       res3: mundo!  
+       res4:   
+       res5: mundo!Coalición Void
+
+NOTAS  
+       Este main te da confianza de que `ft_strjoin` no solo une cadenas, sino que:
+
+       - No pisa memoria.
+       - No se rompe con cadenas vacías.
+       - Siempre termina con `\0`.
+       - Devuelve una copia, no toca los originales.
+
+RESUMEN  
+       - declarar strings  
+       - probar varias combinaciones  
+       - imprimir resultados  
+       - liberar memoria
+
+42 Málaga - Coalición Void               Mayo 2025       FT_STRJOIN_MAIN(1)

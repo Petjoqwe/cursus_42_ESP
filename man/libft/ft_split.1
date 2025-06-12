@@ -1,0 +1,229 @@
+FT_SPLIT(3)               Manual del estudiante 42               FT_SPLIT(3)
+
+NOMBRE  
+       ft_split - divide una cadena en subcadenas, usando un carácter delimitador
+
+SINOPSIS  
+       #include <stdlib.h>    // para malloc y free
+
+       char **ft_split(const char *s, char c);
+
+DESCRIPCIÓN  
+       Esta función toma una cadena s y la divide en subcadenas, usando el carácter c  
+       como separador entre palabras. Cada palabra se guarda en una nueva cadena  
+       reservada con malloc, y se devuelven todas juntas en un array de cadenas.
+
+       El array resultante termina con un puntero NULL para marcar el final,  
+       como requiere el estándar de C.
+
+       ¿Qué se considera una palabra?
+
+       Una palabra es cualquier secuencia de caracteres que no contiene el carácter c.  
+       Dos caracteres c seguidos indican una separación entre palabras,  
+       aunque no haya contenido entre ellos.
+
+       Caracteres consecutivos del tipo c no se incluyen en las palabras,  
+       ni al principio ni al final.
+
+       Ejemplo:
+           s = "  hola   mundo  ", c = ' '
+
+           Resultado:
+               - palabra 1: "hola"
+               - palabra 2: "mundo"
+               - array: ["hola", "mundo", NULL]
+
+       La cadena original s no se modifica. Solo se lee.
+
+       ¿Qué hace la función paso a paso?
+
+       - Recorre la cadena s entera  
+       - Cada vez que detecta el inicio de una palabra (carácter distinto de c),  
+         empieza a contar los caracteres hasta llegar al final de esa palabra  
+       - Copia esa palabra en una nueva cadena con malloc  
+       - Guarda el puntero en el array de resultados  
+       - Repite hasta el final de la cadena  
+       - Añade un último puntero NULL para terminar el array
+
+       Todos los punteros individuales (las palabras) y el array completo  
+       están en memoria dinámica, por lo que deben ser liberados con free.
+
+       Si malloc falla en algún punto del proceso, se libera todo lo anterior  
+       y se devuelve NULL.
+
+Variables utilizadas:
+
+       - size_t i: índice principal para recorrer s  
+       - size_t start: inicio de cada palabra  
+       - size_t word_index: índice para el array de resultados  
+       - char **res: array de cadenas que vamos a devolver  
+       - size_t word_count: número total de palabras que hay en s
+
+PASOS DE LA FUNCIÓN Y CÓDIGO COMENTADO
+
+1. Comprobar si s es NULL:
+
+       if (!s)
+           return NULL;
+
+       Si la cadena no existe, no se puede dividir nada.
+
+2. Calcular cuántas palabras contiene la cadena:
+
+       size_t word_count = 0;
+       size_t i = 0;
+
+       while (s[i])
+       {
+           while (s[i] == c)
+               i++;
+
+           if (s[i])
+           {
+               word_count++;
+               while (s[i] && s[i] != c)
+                   i++;
+           }
+       }
+
+       Explicación:
+       - Saltamos separadores al principio o entre palabras  
+       - Si encontramos un carácter distinto de c, contamos una palabra  
+       - Avanzamos hasta el próximo separador  
+       - Repetimos
+
+3. Reservar memoria para el array de cadenas:
+
+       char **res = malloc(sizeof(char *) * (word_count + 1));
+       if (!res)
+           return NULL;
+
+       Reservamos espacio para todas las palabras y un puntero NULL al final.
+
+4. Extraer cada palabra y guardarla en el array:
+
+       i = 0;
+       word_index = 0;
+
+       while (s[i])
+       {
+           while (s[i] == c)
+               i++;
+
+           if (s[i])
+           {
+               start = i;
+
+               while (s[i] && s[i] != c)
+                   i++;
+
+               res[word_index] = ft_substr(s, start, i - start);
+
+               if (!res[word_index])
+               {
+                   while (word_index > 0)
+                       free(res[--word_index]);
+                   free(res);
+                   return NULL;
+               }
+
+               word_index++;
+           }
+       }
+
+       Explicación línea por línea:
+
+       - i = 0;
+
+         Reiniciamos el índice principal para volver a recorrer la cadena desde el inicio.
+
+       - word_index = 0;
+
+         Este índice indica la posición dentro del array res donde vamos a colocar la siguiente palabra.
+
+       - while (s[i])
+
+         Recorremos la cadena hasta llegar al final.
+
+       - while (s[i] == c)
+
+         Saltamos todos los separadores consecutivos.  
+         No queremos contar espacios como palabras.
+
+       - if (s[i])
+
+         Si encontramos un carácter válido, estamos al inicio de una palabra.
+
+       - start = i;
+
+         Guardamos la posición inicial de la palabra.
+
+       - while (s[i] && s[i] != c)
+
+         Avanzamos hasta encontrar un separador o el final de la cadena.  
+         Así delimitamos el final de la palabra.
+
+       - res[word_index] = ft_substr(s, start, i - start);
+
+         Copiamos la palabra con ft_substr:  
+         - s es la cadena original  
+         - start es desde donde empieza la palabra  
+         - i - start es la longitud
+
+         Esto nos da una nueva cadena con malloc que contiene solo esa palabra.
+
+       - if (!res[word_index])
+
+         Si malloc falla al copiar la palabra, devolvemos NULL y liberamos todo.
+
+       - while (word_index > 0) free(res[--word_index]);
+
+         Liberamos todas las palabras que ya habíamos copiado antes.
+
+       - free(res);
+
+         Liberamos también el array de punteros.
+
+       - return NULL;
+
+         Salimos con NULL porque hubo un error.
+
+       - word_index++;
+
+         Avanzamos al siguiente hueco en el array para guardar la siguiente palabra.
+
+5. Añadir el NULL final:
+
+       res[word_index] = NULL;
+
+       Esto indica el final del array.  
+       Es obligatorio para que las funciones que usen este array sepan dónde termina.
+
+6. Devolver el array:
+
+       return res;
+
+VALOR DEVUELTO  
+       Devuelve un array de cadenas terminadas en NULL.  
+       Cada cadena contiene una palabra extraída de s.  
+       Si hay error de memoria, devuelve NULL y libera lo anterior.
+
+NOTAS  
+       Esta función es útil para dividir texto en palabras o tokens,  
+       especialmente cuando los campos están separados por un carácter fijo  
+       como espacio, coma o tabulación.
+
+       Todo lo que devuelve está en memoria dinámica:  
+       cada palabra y el array deben ser liberados con free.
+
+RESUMEN  
+       Comprobar que s no sea NULL  
+       Calcular cuántas palabras hay  
+       Reservar memoria para el array  
+       Localizar el inicio y fin de cada palabra  
+       Copiar con ft_substr  
+       Añadir NULL al final del array  
+       Devolver el array
+
+42 Málaga - Coalición Void              Mayo 2025              FT_SPLIT(3)
+

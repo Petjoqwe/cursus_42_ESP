@@ -1,0 +1,89 @@
+FT_STRJOIN(3)            Manual del estudiante 42            FT_STRJOIN(3)
+
+NOMBRE  
+       ft_strjoin - une dos cadenas en una nueva usando malloc
+
+SINOPSIS  
+       #include <stdlib.h>     // para malloc y size_t
+       usar ft_strlen y ft_strlcpy si estás en modo libft puro
+
+       char *ft_strjoin(char const *s1, char const *s2);
+
+DESCRIPCIÓN  
+       Esta función sirve para coger dos cadenas (`s1` y `s2`) y crear una tercera
+       nueva en memoria dinámica (heap) con el contenido de ambas pegado, en orden.
+
+       No modifica ninguna de las dos originales, y devuelve una nueva cadena
+       que el usuario deberá liberar con `free()`.
+
+       Vamos paso por paso juntos:
+
+       1. Comprobar que no te pasen NULL por error:
+              if (!s1 || !s2)
+                  return (NULL);
+
+              Si una de las cadenas es NULL (puntero vacío), no podemos unir nada.
+              Esto lo haces al principio para evitar segmentation faults.
+
+       2. Medimos cuánto ocupa cada string:
+              size_t len1 = ft_strlen(s1);
+              size_t len2 = ft_strlen(s2);
+
+              Esto es para saber cuánto espacio vas a necesitar reservar con malloc.
+
+       3. Calculamos el total de memoria a pedir:
+              size_t total = len1 + len2;
+
+              No se suma +1 aquí aún, porque eso se hace justo antes del malloc.
+
+       4. Reservamos memoria suficiente para guardar las dos cadenas y el '\0':
+              char *res = malloc(total + 1);
+
+              Siempre sumas 1 para el carácter nulo que termina la cadena.
+
+       5. Comprobamos si malloc falló:
+              if (!res)
+                  return (NULL);
+
+              Nunca te fíes de malloc. Si devuelve NULL, hay que cortar y salir.
+
+       6. Copiamos la primera cadena:
+              ft_strlcpy(res, s1, len1 + 1);
+
+              Esto copia s1 completa (incluyendo su '\0') en la nueva cadena.
+
+       7. Pegamos la segunda justo al final de la primera:
+              ft_strlcpy(res + len1, s2, len2 + 1);
+
+              Aquí usamos `res + len1` para colocar s2 justo después del final de s1.
+
+              Si no usas strlcpy, puedes hacerlo con bucles y añadir el '\0' tú al final.
+
+       8. Devolvemos la cadena final ya unida:
+              return (res);
+
+              Ahora el usuario tiene una cadena con el contenido de s1 + s2,
+              y puede usarla libremente.
+
+VALOR DEVUELTO  
+       Devuelve un puntero a una nueva cadena con el contenido de s1 seguido de s2.  
+       Si malloc falla o alguna cadena es NULL, devuelve NULL.
+
+NOTAS  
+       Muy útil para concatenar rutas, nombres de archivos, partes de frases, etc.  
+       Recuerda que esta función reserva memoria, así que quien la use debe liberar con free().
+
+       Puedes implementarla con strlcpy o con bucles y un índice manual.  
+       Lo importante es que copies bien y termines en '\0'.
+
+RESUMEN RÁPIDO  
+       - comprobar s1 y s2  
+       - medir longitud de ambas  
+       - calcular total  
+       - malloc con total + 1  
+       - comprobar malloc  
+       - copiar s1  
+       - copiar s2 desde res + len1  
+       - return res
+
+42 Málaga - Coalición Void               Mayo 2025            FT_STRJOIN(3)
